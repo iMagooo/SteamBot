@@ -17,10 +17,15 @@ namespace SteamBot
     {
         private readonly List<RunningBot> botThreads;
         private Log mainLog;
+        private List<int> collectingBotIndexes;
+        private List<int> givingBotIndexes;
+
 
         public BotManager()
         {
             botThreads = new List<RunningBot>();
+            givingBotIndexes = new List<int>();
+            collectingBotIndexes = new List<int>();
         }
 
         public Configuration ConfigObject { get; private set; }
@@ -52,12 +57,16 @@ namespace SteamBot
             for (int i = 0; i < ConfigObject.Bots.Length; i++)
             {
                 Configuration.BotInfo info = ConfigObject.Bots[i];
-                if (ConfigObject.AutoStartAllBots || info.AutoStart)
+                if (info.BotControlClass == "ItemGivingUserHandler")
                 {
-                    mainLog.Info("Launching Bot " + info.DisplayName + "...");
+                    givingBotIndexes.Add(i);
+                }
+                else if (info.BotControlClass == "ItemCollectingUserHandler")
+                {
+                    collectingBotIndexes.Add(i);
                 }
 
-                var v = new RunningBot(i, ConfigObject);
+                var v = new RunningBot(i, ConfigObject, this);
                 botThreads.Add(v);
             }
 
@@ -156,7 +165,7 @@ namespace SteamBot
             {
                 bot.Start();
             }
-            
+
         }
 
         /// <summary>
@@ -224,18 +233,19 @@ namespace SteamBot
         {
             private const string BotExecutable = "SteamBot.exe";
             private readonly Configuration config;
+            private BotManager Manager;
 
             /// <summary>
             /// Creates a new instance of <see cref="RunningBot"/> class.
             /// </summary>
             /// <param name="index">The index of the bot in the configuration.</param>
             /// <param name="config">The bots configuration object.</param>
-            public RunningBot(int index, Configuration config)
+            public RunningBot(int index, Configuration config, BotManager m)
             {
                 this.config = config;
                 BotConfigIndex = index;
                 BotConfig = config.Bots[BotConfigIndex];
-                this.config = config;
+                Manager = m;
             }
 
             public int BotConfigIndex { get; private set; }
@@ -276,6 +286,7 @@ namespace SteamBot
                 Bot b = new Bot(botConfig,
                                 config.ApiKey,
                                 UserHandlerCreator,
+                                Manager,
                                 true);
 
                 TheBot = b;
@@ -292,5 +303,11 @@ namespace SteamBot
         }
 
         #endregion Nested RunningBot class
+
+        #region Automatic Item Collection
+        public void StartAutomaticCollection() { }
+
+        #endregion Automatic Item Collection
+
     }
 }

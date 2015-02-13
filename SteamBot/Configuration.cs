@@ -73,15 +73,6 @@ namespace SteamBot
         /// </summary>
         public string MainLog { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to auto start all bots.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> to make the bots start on program load; otherwise,
-        /// <c>false</c> to not start them.
-        /// </value>
-        public bool AutoStartAllBots { get; set; }
-
         #endregion Top-level config properties
 
         /// <summary>
@@ -120,20 +111,6 @@ namespace SteamBot
             public int TradePollingInterval { get; set; }
             public string LogLevel { get; set; }
             public ulong[] Admins { get; set; }
-
-            /// <summary>
-            /// Gets or sets a value indicating whether to auto start this bot.
-            /// </summary>
-            /// <value>
-            /// <c>true</c> to make the bot start on program load.
-            /// </value>
-            /// <remarks>
-            /// If <see cref="SteamBot.Configuration.AutoStartAllBots "/> is true,
-            /// then this property has no effect and is ignored.
-            /// </remarks>
-            [JsonProperty (Required = Required.Default, DefaultValueHandling = DefaultValueHandling.Populate)]
-            [DefaultValue (true)]
-            public bool AutoStart { get; set; }
 
             public override string ToString()
             {

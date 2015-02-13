@@ -93,6 +93,8 @@ namespace SteamBot
 
         public bool IsRunning = false;
 
+        private BotManager Manager;
+
         public string AuthCode { get; set; }
 
         SteamUser.LogOnDetails logOnDetails;
@@ -112,7 +114,7 @@ namespace SteamBot
 
         private BackgroundWorker backgroundWorker;
 
-        public Bot(Configuration.BotInfo config, string apiKey, UserHandlerCreator handlerCreator, bool debug = false, bool process = false)
+        public Bot(Configuration.BotInfo config, string apiKey, UserHandlerCreator handlerCreator, BotManager m, bool debug = false)
         {
             logOnDetails = new SteamUser.LogOnDetails
             {
@@ -140,6 +142,7 @@ namespace SteamBot
             log          = new Log (config.LogFile, this.DisplayName, LogLevel);
             CreateHandler = handlerCreator;
             BotControlClass = config.BotControlClass;
+            Manager = m;
             SteamWeb = new SteamWeb();
 
             // Hacking around https
