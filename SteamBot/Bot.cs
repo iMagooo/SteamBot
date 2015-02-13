@@ -91,7 +91,6 @@ namespace SteamBot
 
         bool CookiesAreInvalid = true;
 
-        bool isprocess;
         public bool IsRunning = false;
 
         public string AuthCode { get; set; }
@@ -128,7 +127,6 @@ namespace SteamBot
             TradePollingInterval = config.TradePollingInterval <= 100 ? 800 : config.TradePollingInterval;
             Admins       = config.Admins;
             this.ApiKey = !String.IsNullOrEmpty(config.ApiKey) ? config.ApiKey : apiKey;
-            this.isprocess = process;
 
             try
             {

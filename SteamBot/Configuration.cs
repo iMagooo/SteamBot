@@ -74,16 +74,6 @@ namespace SteamBot
         public string MainLog { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to use separate processes.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if bot manager is to open each bot in it's own process;
-        /// otherwise, <c>false</c> to open each bot in a separate thread.
-        /// Default is <c>false</c>.
-        /// </value>
-        public bool UseSeparateProcesses { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to auto start all bots.
         /// </summary>
         /// <value>
