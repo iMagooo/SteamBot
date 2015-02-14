@@ -44,7 +44,7 @@ namespace SteamBot
             }
             else
             {
-                manager.StartAutomaticCollection();
+                manager.InitiateAutomaticCollection();
 
                 Console.WriteLine("Type help for bot manager commands. ");
                 Console.Write("botmgr > ");

@@ -1,7 +1,10 @@
 {
 "Admins":["234567"],
 "ApiKey":"Steam API Key goes here!",
-"mainLog": "syslog.log",
+"mainLog":"syslog.log",
+"AutoCraftWeapons":"true",
+"DeleteCrates":"true",
+"DeleteCrateExclusions":[10,20,30,40,50,60],
 "Bots": [
         {
             "Username":"BOT USERNAME",
@@ -10,7 +13,7 @@
             "DisplayName":"TestBot",
             "ChatResponse":"Hi there bro",
             "logFile": "TestBot.log",
-            "BotControlClass": "SteamBot.SimpleUserHandler",
+            "BotControlClass": "SteamBot.ItemCollectingUserHandler",
             "MaximumTradeTime":180,
             "MaximumActionGap":30,
             "DisplayNamePrefix":"[AutomatedBot] ",

@@ -18,6 +18,7 @@ namespace SteamBot
             Configuration config =  JsonConvert.DeserializeObject<Configuration>(json);
 
             config.Admins = config.Admins ?? new ulong[0];
+            config.DeleteCrateExclusions = config.DeleteCrateExclusions ?? new int[0];
 
             // merge bot-specific admins with global admins
             foreach (BotInfo bot in config.Bots)
@@ -72,6 +73,12 @@ namespace SteamBot
         /// Gets or sets the main log file name.
         /// </summary>
         public string MainLog { get; set; }
+
+        public bool AutoCraftWeapons { get; set; }
+
+        public bool DeleteCrates { get; set; }
+
+        public int[] DeleteCrateExclusions { get; set; }
 
         #endregion Top-level config properties
 

@@ -70,6 +70,9 @@ namespace SteamBot
                 botThreads.Add(v);
             }
 
+            if (collectingBotIndexes.Count() == 0)
+                throw new ArgumentException("Configuration file did not contain any bots listed with ItemCollectingUserHandler", "configFile");
+
             return true;
         }
 
@@ -305,7 +308,18 @@ namespace SteamBot
         #endregion Nested RunningBot class
 
         #region Automatic Item Collection
-        public void StartAutomaticCollection() { }
+        public void InitiateAutomaticCollection() 
+        {
+            if (collectingBotIndexes.Count() != 0)
+            {
+                StartBot(collectingBotIndexes.ElementAt(0));
+
+                if (givingBotIndexes.Count() != 0)
+                {
+                    StartBot(givingBotIndexes.ElementAt(0));
+                }
+            }
+        }
 
         #endregion Automatic Item Collection
 

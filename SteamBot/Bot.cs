@@ -93,7 +93,7 @@ namespace SteamBot
 
         public bool IsRunning = false;
 
-        private BotManager Manager;
+        public BotManager Manager { get; private set; }
 
         public string AuthCode { get; set; }
 
@@ -979,5 +979,9 @@ namespace SteamBot
         }
 
         #endregion
+
+        public void AutoCraftAllWeapons() { }
+        public void DeleteCratesWithExclusions() { }
+        public void ReportToManager() { }
     }
 }
