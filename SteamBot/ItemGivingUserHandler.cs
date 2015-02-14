@@ -103,7 +103,6 @@ namespace SteamBot
 
         public override void OnLoginCompleted()
         {
-            Bot.GetInventory();
             if (Bot.Manager.ConfigObject.AutoCraftWeapons)
             {
                 Bot.AutoCraftAllWeapons();

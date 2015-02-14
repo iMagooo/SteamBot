@@ -4,6 +4,7 @@ using System.Web;
 using System.Net;
 using System.Text;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -980,8 +981,155 @@ namespace SteamBot
 
         #endregion
 
-        public void AutoCraftAllWeapons() { }
-        public void DeleteCratesWithExclusions() { }
+        /// <summary>
+        /// Automatically crafts all UNIQUE quality weapons to scrap metal
+        /// Function originally written by "waylaidwanderer"
+        /// </summary>
+        public void AutoCraftAllWeapons() 
+        {
+            GetInventory();
+            List<ulong> toCraft = new List<ulong>();
+            string[] TF2Class = { "Scout", "Soldier", "Pyro", "Demoman", "Heavy", "Engineer", "Medic", "Sniper", "Spy" };
+            foreach (string currentClass in TF2Class)
+            {
+                foreach (var item in MyInventory.Items)
+                {
+                    var schemaItem = Trade.CurrentSchema.GetItem(item.Defindex);
+                    if (schemaItem.CraftClass == "weapon" && schemaItem.ItemQuality == 6)
+                    {
+                        if (!item.IsNotTradeable && !item.IsNotCraftable && string.Join(",", schemaItem.UsableByClasses).Contains(currentClass) && !toCraft.Contains(item.Id))
+                        {
+                            toCraft.Add(item.Id);
+                        }
+                    }
+                }
+                if (toCraft.Count >= 2)
+                {
+                    if (CurrentGame != 440)
+                    {
+                        SetGamePlaying(440);
+                        System.Threading.Thread.Sleep(1000);
+                    }
+                    List<ulong> craft = new List<ulong>();
+                    foreach (var item in toCraft)
+                    {
+                        craft.Add(item);
+                        if (craft.Count == 2)
+                        {
+                            TF2GC.Crafting.CraftItems(this, craft.ToArray());
+                            System.Threading.Thread.Sleep(300);
+                            craft.Clear();
+                        }
+                    }
+                }
+                toCraft.Clear();
+            }
+            SetGamePlaying(0);
+        }
+
+        /// <summary>
+        /// Deletes all crates that are not included in configuration exclusion array
+        /// </summary>
+        public void DeleteCratesWithExclusions()
+        {
+            // Populate a list of all crates within the Bot's inventory
+            GetInventory();
+            var crates = Trade.CurrentSchema.GetItemsByCraftingMaterial("supply_crate");
+            List<Inventory.Item> invItems = new List<Inventory.Item>();
+
+            foreach (var schemaItem in crates)
+            {
+                ushort defindex = schemaItem.Defindex;
+                invItems.AddRange(MyInventory.GetItemsByDefindex(defindex));
+            }
+
+            // Populate a list of all crates to be deleted
+            List<ulong> toDelete = new List<ulong>();
+            foreach (var item in invItems)
+            {
+                for (int i = 0; i < item.Attributes.Length; i++)
+                {
+                    Inventory.ItemAttribute attrib = item.Attributes[i];
+                    if (attrib.Defindex == 187)
+                    {
+                        if (!Manager.ConfigObject.DeleteCrateExclusions.Contains<int>((int) attrib.FloatValue))
+                        {
+                            toDelete.Add(item.Id);
+                        }
+                    }
+                }
+            }
+
+            // Put the bot into a game and delete all the crates
+            if (CurrentGame != 440)
+            {
+                SetGamePlaying(440);
+                System.Threading.Thread.Sleep(1000);
+            }
+
+            foreach (ulong itemID in toDelete)
+            {
+                TF2GC.Items.DeleteItem(this, itemID);
+                System.Threading.Thread.Sleep(200);
+            }
+
+            toDelete.Clear();
+            SetGamePlaying(0);
+        }
+
+        /// <summary>
+        /// Craft metal into higher 'levelled' metal
+        /// </summary>
+        public void CombineAllMetal()
+        {
+            GetInventory();
+            List<ulong> metal = new List<ulong>();
+            foreach (Inventory.Item item in MyInventory.Items)
+            {
+                // Find all scrap metal in the inventory
+                if (item.Defindex == 5000)
+                {
+                    metal.Add(item.Id);
+                }
+            }
+
+            List<ulong> toCraft = new List<ulong>();
+
+            // Combine scrap metal, 3 scrap = 1 reclaimed metal
+            while (metal.Count >= 3)
+            {
+                toCraft.AddRange(metal.GetRange(0, 3));
+
+                TF2GC.Crafting.CraftItems(this, toCraft.ToArray());
+                System.Threading.Thread.Sleep(300);
+                toCraft.Clear();
+                metal.RemoveRange(0, 3);
+            }
+            metal.Clear();
+
+            GetInventory();
+            foreach (Inventory.Item item in MyInventory.Items)
+            {
+                // Find all reclaimed metal in the inventory
+                if (item.Defindex == 5001)
+                {
+                    metal.Add(item.Id);
+                }
+            }
+
+            // Combine reclaimed metal, 3 reclaimed = 1 refined metal
+            while (metal.Count >= 3)
+            {
+                toCraft.AddRange(metal.GetRange(0, 3));
+
+                TF2GC.Crafting.CraftItems(this, toCraft.ToArray());
+                System.Threading.Thread.Sleep(300);
+                toCraft.Clear();
+                metal.RemoveRange(0, 3);
+            }
+            metal.Clear();
+        }
+
         public void ReportToManager() { }
     }
 }

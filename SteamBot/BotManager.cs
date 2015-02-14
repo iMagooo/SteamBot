@@ -57,11 +57,11 @@ namespace SteamBot
             for (int i = 0; i < ConfigObject.Bots.Length; i++)
             {
                 Configuration.BotInfo info = ConfigObject.Bots[i];
-                if (info.BotControlClass == "ItemGivingUserHandler")
+                if (info.BotControlClass == "SteamBot.ItemGivingUserHandler")
                 {
                     givingBotIndexes.Add(i);
                 }
-                else if (info.BotControlClass == "ItemCollectingUserHandler")
+                else if (info.BotControlClass == "SteamBot.ItemCollectingUserHandler")
                 {
                     collectingBotIndexes.Add(i);
                 }
