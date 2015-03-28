@@ -17,9 +17,10 @@ Retrieving the source code should be done by following the [installation guide] 
 
 See the [configuration guide] on the wiki. This guide covers configuring a basic bot as well as creating a custom user handler.
 
-## Bot Administration
+## Changes from original SteamBot
 
-While running the bots you may find it necessary to do some basic operations like shutting down and restarting a bot. The console will take some commands to allow you to do some this. See the [usage guide] for more information.
+You may notice some changes from the original SteamBot framework. The most notable change being the removal of using separate processes for each running bot. I made this decision to simplify Bot-to-BotManager communication. Due to the lack of modularity in the original SteamBot framework I have had to chop and change the code, rather than building upon it.
+If you already use SteamBot and wish to utilise this project be sure to copy across /Bin/Debug/sentryfiles/ OR /Bin/Release/sentryfiles/ to ensure you do not receive a no-trade period on Steam for this system.
 
 ## More help?
 If it's a bug, open an Issue; if you have a fix, read [CONTRIBUTING.md] and open a Pull Request. Please use the issue tracker only for bugs reports and pull requests. 
