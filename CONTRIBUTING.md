@@ -2,7 +2,7 @@
 When you're contributing to SteamBot, there are a few rules you should follow.  First and foremost, SteamBot should be able to compile and run on Linux.  SteamBot development works in both Visual Studio and MonoDevelop, but _please_ keep your temporary files (such as `.pidb`, `.*~`, or even `.tmp`) out of the project.
 
 ## How To Contribute ##
-1. Fork The Repository ([Jessecar96/SteamBot](https://github.com/Jessecar96/SteamBot))
+1. Fork The Repository ([iMagooo/SteamBot](https://github.com/iMagooo/SteamBot))
 2. Branch It
 	- this is because when you do the pull request for it, it includes commits you make after you make the pull request and before the pull request is accepted
 3. Make Your Changes
