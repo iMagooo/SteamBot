@@ -1,6 +1,6 @@
-This modified SteamBot project aims to help those who farm TF2 items across many different Steam accounts by providing an easy to use item collection system.
+This modified SteamBot project aims to help those who farm TF2 items across many different Steam accounts by providing an easy to use item collection system. In order for the system to work as intended you should use Steam accounts that are able to use trade offers without email confirmation. I have written the majority of the code added to make this modification to SteamBot (code reused is acknowledged within the code, IIRC I only reused one function), but I would like to shoutout to the original creators of SteamBot, [Jessecar96] and [geel9], for their tremendous work on the SteamBot project.
 
-**SteamBot** is a bot written in C# for the purpose of interacting with Steam Chat and Steam Trade.  As of right now, about 8 contributors have all added to the bot.  The bot is publicly available under the MIT License. Check out [LICENSE] for more details.
+**SteamBot** is a bot written in C# for the purpose of interacting with Steam Chat and Steam Trade.  As of right now, about 8 contributors have all added to the [original project].  The bot is publicly available under the MIT License. Check out [LICENSE] for more details.
 
 There are several things you must do in order to get SteamBot working:
 
@@ -28,7 +28,9 @@ If it's a bug, open an Issue; if you have a fix, read [CONTRIBUTING.md] and open
 ## Wanna Contribute?
 Please read [CONTRIBUTING.md].
 
-
+   [Jessecar96]: https://github.com/Jessecar96
+   [geel9]: https://github.com/geel9
+   [original project]: https://github.com/Jessecar96/SteamBot/
    [installation guide]: https://github.com/iMagooo/SteamBot/wiki/Installation-Guide
    [CONTRIBUTING.md]: https://github.com/iMagooo/SteamBot/blob/master/CONTRIBUTING.md
    [LICENSE]: https://github.com/iMagooo/SteamBot/blob/master/LICENSE
