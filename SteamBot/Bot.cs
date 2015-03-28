@@ -981,6 +981,8 @@ namespace SteamBot
 
         #endregion
 
+        #region Item Management
+
         /// <summary>
         /// Automatically crafts all UNIQUE quality weapons to scrap metal
         /// Function originally written by "waylaidwanderer"
@@ -1137,10 +1139,27 @@ namespace SteamBot
             SetGamePlaying(0);
         }
 
+        #endregion Item Management
+
         public void ReportToManager() 
         {
             GetInventory();
             Manager.ReportReady(this);
+        }
+
+        public void PleaseReport()
+        {
+            if (Manager.ConfigObject.AutoCraftWeapons)
+            {
+                AutoCraftAllWeapons();
+            }
+            if (Manager.ConfigObject.DeleteCrates)
+            {
+                DeleteCratesWithExclusions();
+            }
+
+            CombineAllMetal();
+            ReportToManager();
         }
 
         public void tradeItems(int numItems, SteamID otherID)
@@ -1161,22 +1180,7 @@ namespace SteamBot
             if (offer.Send(out newOfferId))
             {
                 log.Success("Trade offer sent : Offer ID " + newOfferId);
-            }            
-        }
-
-        public void PleaseReport()
-        {
-            if (Manager.ConfigObject.AutoCraftWeapons)
-            {
-                AutoCraftAllWeapons();
             }
-            if (Manager.ConfigObject.DeleteCrates)
-            {
-                DeleteCratesWithExclusions();
-            }
-
-            CombineAllMetal();
-            ReportToManager();
         }
     }
 }

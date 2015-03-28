@@ -234,7 +234,7 @@ namespace SteamBot
         #region Nested RunningBot class
 
         /// <summary>
-        /// Nested class that holds the information about a spawned bot process.
+        /// Nested class that holds the information about a spawned bot.
         /// </summary>
         private class RunningBot
         {
@@ -259,7 +259,6 @@ namespace SteamBot
 
             public Configuration.BotInfo BotConfig { get; private set; }
 
-            // will not be null in threaded mode. will be null in process mode.
             public Bot TheBot { get; set; }
 
             public bool IsRunning = false;
@@ -349,17 +348,20 @@ namespace SteamBot
                 givingBot = reportingBot;
             }
 
+            // If both bots have 'checked-in' we can get them to trade each other
             if (collectingBot != null && givingBot != null)
             {
                 givingBot.SteamFriends.AddFriend(collectingBot.SteamUser.SteamID);
                 int numSlotsAvail = (int)collectingBot.MyInventory.NumSlots - collectingBot.MyInventory.Items.Count();
-                mainLog.Success("Giving number of tradable items: " + givingBot.MyInventory.GetNumberOfTradableItems());
+
+                // If collecting bot has no inventory space available OR giving bot has no items to trade
                 if (numSlotsAvail == 0 || givingBot.MyInventory.GetNumberOfTradableItems() == 0)
                 {
                     ReportTradeSuccess();
                 }
                 else
                 {
+                    // MUST NOT trigger a trade until the bots are friends.
                     while (givingBot.SteamFriends.GetFriendRelationship(collectingBot.SteamUser.SteamID) != EFriendRelationship.Friend)
                     {
                         System.Threading.Thread.Sleep(100);
@@ -399,8 +401,7 @@ namespace SteamBot
                 {
                     StopBots();
                     Console.WriteLine("There are no more collecting bots available!");
-                }
-                
+                }  
             }
             else
             {
@@ -423,8 +424,6 @@ namespace SteamBot
             {
                 givingBot.PleaseReport();
             }
-
-            
         }
 
         #endregion Automatic Item Collection

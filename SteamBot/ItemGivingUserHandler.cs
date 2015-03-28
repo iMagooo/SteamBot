@@ -12,7 +12,6 @@ namespace SteamBot
 
         public override void OnNewTradeOffer(TradeOffer offer)
         {
-            //receiving a trade offer 
             Log.Success("Received a trade offer from user: " + offer.PartnerSteamId.ConvertToUInt64());
             if (IsAdmin)
             {
