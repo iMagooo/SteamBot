@@ -988,6 +988,7 @@ namespace SteamBot
         public void AutoCraftAllWeapons() 
         {
             GetInventory();
+
             List<ulong> toCraft = new List<ulong>();
             string[] TF2Class = { "Scout", "Soldier", "Pyro", "Demoman", "Heavy", "Engineer", "Medic", "Sniper", "Spy" };
             foreach (string currentClass in TF2Class)
@@ -1083,6 +1084,11 @@ namespace SteamBot
         public void CombineAllMetal()
         {
             GetInventory();
+            if (CurrentGame != 440)
+            {
+                SetGamePlaying(440);
+                System.Threading.Thread.Sleep(1000);
+            }
             List<ulong> metal = new List<ulong>();
             foreach (Inventory.Item item in MyInventory.Items)
             {
@@ -1128,8 +1134,49 @@ namespace SteamBot
                 metal.RemoveRange(0, 3);
             }
             metal.Clear();
+            SetGamePlaying(0);
         }
 
-        public void ReportToManager() { }
+        public void ReportToManager() 
+        {
+            GetInventory();
+            Manager.ReportReady(this);
+        }
+
+        public void tradeItems(int numItems, SteamID otherID)
+        {
+            TradeOffer offer = NewTradeOffer(otherID);
+            int count = 0;
+            foreach (Inventory.Item item in MyInventory.Items)
+            {
+                if (!item.IsNotTradeable)
+                {
+                    offer.Items.AddMyItem(item.AppId, item.ContextId, (long)item.Id);
+                    if (++count >= numItems)
+                        break;
+                }
+            }
+
+            string newOfferId;
+            if (offer.Send(out newOfferId))
+            {
+                log.Success("Trade offer sent : Offer ID " + newOfferId);
+            }            
+        }
+
+        public void PleaseReport()
+        {
+            if (Manager.ConfigObject.AutoCraftWeapons)
+            {
+                AutoCraftAllWeapons();
+            }
+            if (Manager.ConfigObject.DeleteCrates)
+            {
+                DeleteCratesWithExclusions();
+            }
+
+            CombineAllMetal();
+            ReportToManager();
+        }
     }
 }

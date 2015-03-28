@@ -20,12 +20,16 @@ namespace SteamBot
         private List<int> collectingBotIndexes;
         private List<int> givingBotIndexes;
 
+        private Bot collectingBot = null;
+        private Bot givingBot = null;
+        public List<ulong> approvedIDs;
 
         public BotManager()
         {
             botThreads = new List<RunningBot>();
             givingBotIndexes = new List<int>();
             collectingBotIndexes = new List<int>();
+            approvedIDs = new List<ulong>();
         }
 
         public Configuration ConfigObject { get; private set; }
@@ -308,6 +312,7 @@ namespace SteamBot
         #endregion Nested RunningBot class
 
         #region Automatic Item Collection
+
         public void InitiateAutomaticCollection() 
         {
             if (collectingBotIndexes.Count() != 0)
@@ -318,7 +323,108 @@ namespace SteamBot
                 {
                     StartBot(givingBotIndexes.ElementAt(0));
                 }
+                else
+                {
+                    StopBots();
+                    Console.WriteLine("There are no more giving bots available!");
+                }
             }
+        }
+
+        public void ReportReady(Bot reportingBot)
+        {
+            ulong id = reportingBot.SteamUser.SteamID.ConvertToUInt64();
+            if (!approvedIDs.Contains(id))
+            {
+                approvedIDs.Add(id);
+            }
+
+            if (reportingBot.BotControlClass == "SteamBot.ItemCollectingUserHandler")
+            {
+                collectingBot = reportingBot;
+
+            }
+            else if (reportingBot.BotControlClass == "SteamBot.ItemGivingUserHandler")
+            {
+                givingBot = reportingBot;
+            }
+
+            if (collectingBot != null && givingBot != null)
+            {
+                givingBot.SteamFriends.AddFriend(collectingBot.SteamUser.SteamID);
+                int numSlotsAvail = (int)collectingBot.MyInventory.NumSlots - collectingBot.MyInventory.Items.Count();
+                mainLog.Success("Giving number of tradable items: " + givingBot.MyInventory.GetNumberOfTradableItems());
+                if (numSlotsAvail == 0 || givingBot.MyInventory.GetNumberOfTradableItems() == 0)
+                {
+                    ReportTradeSuccess();
+                }
+                else
+                {
+                    while (givingBot.SteamFriends.GetFriendRelationship(collectingBot.SteamUser.SteamID) != EFriendRelationship.Friend)
+                    {
+                        System.Threading.Thread.Sleep(100);
+                    }
+
+                    givingBot.tradeItems(numSlotsAvail, collectingBot.SteamUser.SteamID);
+                }
+            }
+        }
+
+        public void ReportTradeSuccess()
+        {
+            collectingBot.GetInventory();
+            givingBot.GetInventory();
+
+            if (givingBot.MyInventory.GetNumberOfTradableItems() == 0)
+            {
+                givingBot = null;
+                StopBot(givingBotIndexes.ElementAt(0));
+                givingBotIndexes.RemoveAt(0);
+            }
+
+            if (collectingBot.MyInventory.NumSlots == collectingBot.MyInventory.Items.Count())
+            {
+                collectingBot = null;
+                StopBot(collectingBotIndexes.ElementAt(0));
+                collectingBotIndexes.RemoveAt(0);
+            }
+
+            if (collectingBot == null)
+            {
+                if (collectingBotIndexes.Count() != 0)
+                {
+                    StartBot(collectingBotIndexes.ElementAt(0));
+                }
+                else
+                {
+                    StopBots();
+                    Console.WriteLine("There are no more collecting bots available!");
+                }
+                
+            }
+            else
+            {
+                collectingBot.PleaseReport();
+            }
+
+            if (givingBot == null)
+            {
+                if (givingBotIndexes.Count() != 0)
+                {
+                    StartBot(givingBotIndexes.ElementAt(0));
+                }
+                else
+                {
+                    StopBots();
+                    Console.WriteLine("There are no more giving bots available!");
+                }
+            }
+            else
+            {
+                givingBot.PleaseReport();
+            }
+
+            
         }
 
         #endregion Automatic Item Collection

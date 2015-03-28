@@ -79,6 +79,11 @@ namespace SteamTrade
             return Items.Where(item => item.Defindex == defindex).ToList();
         }
 
+        public int GetNumberOfTradableItems ()
+        {
+            return Items.Where(item => item.IsNotTradeable == false).Count();
+        }
+
         public class Item
         {
             public int AppId = 440;
