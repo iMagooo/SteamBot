@@ -35,17 +35,17 @@ namespace SteamBot
 
         public override bool OnGroupAdd() { return false; }
 
-        public override bool OnFriendAdd() { return (IsAdmin || Bot.Manager.approvedIDs.Contains(OtherSID.ConvertToUInt64())); }
+        public override bool OnFriendAdd() { return (IsAdmin || IsApproved); }
 
         public override void OnFriendRemove() { }
 
         public override void OnLoginCompleted()
         {
-            if (Bot.Manager.ConfigObject.AutoCraftWeapons)
+            if (AutoCraftWeapons)
             {
                 Bot.AutoCraftAllWeapons();
             }
-            if (Bot.Manager.ConfigObject.DeleteCrates)
+            if (DeleteCrates)
             {
                 Bot.DeleteCratesWithExclusions();
             }

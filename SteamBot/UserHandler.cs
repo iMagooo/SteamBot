@@ -104,6 +104,50 @@ namespace SteamBot
         }
 
         /// <summary>
+        /// Gets a value indicating whether the other user is pre approved.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the other user is an approved user; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsApproved
+        {
+            get { return Bot.Manager.approvedIDs.Contains(OtherSID.ConvertToUInt64()); }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether friends should be deleted
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if friends are to be deleted; otherwise, <c>false</c>.
+        /// </value>
+        public bool DeleteFriends
+        {
+            get { return Bot.Manager.ConfigObject.DeleteFriends; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether crates should be deleted
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if crates are to be deleted; otherwise, <c>false</c>.
+        /// </value>
+        public bool DeleteCrates
+        {
+            get { return Bot.Manager.ConfigObject.DeleteCrates; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether weapons should be automatically crafted
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if weapons are to be crafted; otherwise, <c>false</c>.
+        /// </value>
+        public bool AutoCraftWeapons
+        {
+            get { return Bot.Manager.ConfigObject.AutoCraftWeapons; }
+        }
+
+        /// <summary>
         /// Called when the bot is invited to a Steam group
         /// </summary>
         /// <returns>

@@ -13,7 +13,7 @@ namespace SteamBot
         public override void OnNewTradeOffer(TradeOffer offer)
         {
             Log.Success("Received a trade offer from user: " + offer.PartnerSteamId.ConvertToUInt64());
-            if (IsAdmin || Bot.Manager.approvedIDs.Contains(OtherSID.ConvertToUInt64()))
+            if (IsAdmin || IsApproved)
             {
                 string tradeid;
                 if (offer.Accept(out tradeid))
@@ -36,21 +36,21 @@ namespace SteamBot
 
         public override bool OnGroupAdd() { return false; }
 
-        public override bool OnFriendAdd() { return (IsAdmin || Bot.Manager.approvedIDs.Contains(OtherSID.ConvertToUInt64())); }
+        public override bool OnFriendAdd() { return (IsAdmin || IsApproved); }
 
         public override void OnFriendRemove() { }
 
         public override void OnLoginCompleted() 
         {
-            if (Bot.Manager.ConfigObject.DeleteFriends)
+            if (DeleteFriends)
             {
                 Bot.DeleteAllFriends();
             }
-            if (Bot.Manager.ConfigObject.AutoCraftWeapons)
+            if (AutoCraftWeapons)
             {
                 Bot.AutoCraftAllWeapons();
             }
-            if (Bot.Manager.ConfigObject.DeleteCrates)
+            if (DeleteCrates)
             {
                 Bot.DeleteCratesWithExclusions();
             }
