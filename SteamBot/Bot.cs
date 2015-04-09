@@ -1192,6 +1192,7 @@ namespace SteamBot
                 count++;
             }
             log.Success("Removed " + count + " friends.");
+
         }
     }
 }
