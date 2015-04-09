@@ -75,17 +75,22 @@ namespace SteamBot
         public string MainLog { get; set; }
 
         /// <summary>
-        /// Gets or sets the automatically craft weapons to metal flag
+        /// Gets or sets the delete friends flag.
+        /// </summary>
+        public bool DeleteFriends { get; set; }
+
+        /// <summary>
+        /// Gets or sets the automatically craft weapons to metal flag.
         /// </summary>
         public bool AutoCraftWeapons { get; set; }
 
         /// <summary>
-        /// Gets or sets the crates should be deleted flag
+        /// Gets or sets the crates should be deleted flag.
         /// </summary>
         public bool DeleteCrates { get; set; }
 
         /// <summary>
-        /// Gets or sets the array of crate series to be excluded from deletion
+        /// Gets or sets the array of crate series to be excluded from deletion.
         /// </summary>
         public int[] DeleteCrateExclusions { get; set; }
 

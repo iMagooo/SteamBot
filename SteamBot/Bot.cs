@@ -1182,5 +1182,16 @@ namespace SteamBot
                 log.Success("Trade offer sent : Offer ID " + newOfferId);
             }
         }
+
+        public void DeleteAllFriends()
+        {
+            int count = 0;
+            foreach (SteamID friend in friends)
+            {
+                SteamFriends.RemoveFriend(friend);
+                count++;
+            }
+            log.Success("Removed " + count + " friends.");
+        }
     }
 }

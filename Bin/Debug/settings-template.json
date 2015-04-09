@@ -2,6 +2,7 @@
 "Admins":["234567"],
 "ApiKey":"Steam API Key goes here!",
 "mainLog":"syslog.log",
+"DeleteFriends":"true",
 "AutoCraftWeapons":"true",
 "DeleteCrates":"true",
 "DeleteCrateExclusions":[10,20,30,40,50,60],

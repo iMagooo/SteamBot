@@ -42,6 +42,10 @@ namespace SteamBot
 
         public override void OnLoginCompleted() 
         {
+            if (Bot.Manager.ConfigObject.DeleteFriends)
+            {
+                Bot.DeleteAllFriends();
+            }
             if (Bot.Manager.ConfigObject.AutoCraftWeapons)
             {
                 Bot.AutoCraftAllWeapons();
