@@ -341,11 +341,12 @@ namespace SteamBot
             if (reportingBot.BotControlClass == "SteamBot.ItemCollectingUserHandler")
             {
                 collectingBot = reportingBot;
-
+                mainLog.Debug("CollectingBot reported ready with id: " + id);
             }
             else if (reportingBot.BotControlClass == "SteamBot.ItemGivingUserHandler")
             {
                 givingBot = reportingBot;
+                mainLog.Debug("GivingBot reported ready with id: " + id);
             }
 
             // If both bots have 'checked-in' we can get them to trade each other
@@ -353,7 +354,12 @@ namespace SteamBot
             {
                 if (givingBot.SteamFriends.GetFriendRelationship(collectingBot.SteamUser.SteamID) != EFriendRelationship.Friend)
                 {
+                    mainLog.Debug("Not friends, " + collectingBot.SteamUser.SteamID.ConvertToUInt64() + " is adding " + givingBot.SteamUser.SteamID.ConvertToUInt64());
                     collectingBot.SteamFriends.AddFriend(givingBot.SteamUser.SteamID);
+                }
+                else
+                {
+                    mainLog.Debug("Already friends, " + collectingBot.SteamUser.SteamID.ConvertToUInt64() + " with " + givingBot.SteamUser.SteamID.ConvertToUInt64());
                 }
 
                 int numSlotsAvail = (int)collectingBot.MyInventory.NumSlots - collectingBot.MyInventory.Items.Count();
@@ -361,6 +367,7 @@ namespace SteamBot
                 // If collecting bot has no inventory space available OR giving bot has no items to trade
                 if (numSlotsAvail == 0 || givingBot.MyInventory.GetNumberOfTradableItems() == 0)
                 {
+                    mainLog.Debug("No items to trade or collecting full");
                     ReportTradeSuccess();
                 }
                 else
@@ -383,6 +390,7 @@ namespace SteamBot
 
             if (givingBot.MyInventory.GetNumberOfTradableItems() == 0)
             {
+                mainLog.Debug("No items to trade");
                 givingBot = null;
                 StopBot(givingBotIndexes.ElementAt(0));
                 givingBotIndexes.RemoveAt(0);
@@ -390,6 +398,7 @@ namespace SteamBot
 
             if (collectingBot.MyInventory.NumSlots == collectingBot.MyInventory.Items.Count())
             {
+                mainLog.Debug("Collecting full");
                 collectingBot = null;
                 StopBot(collectingBotIndexes.ElementAt(0));
                 collectingBotIndexes.RemoveAt(0);

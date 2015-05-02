@@ -35,7 +35,11 @@ namespace SteamBot
 
         public override bool OnGroupAdd() { return false; }
 
-        public override bool OnFriendAdd() { return (IsAdmin || IsApproved); }
+        public override bool OnFriendAdd() 
+        {
+            Log.Debug("Friend request from: " + OtherSID.ConvertToUInt64() + ", is approved: " + IsApproved);
+            return (IsAdmin || IsApproved); 
+        }
 
         public override void OnFriendRemove() { }
 
@@ -51,6 +55,7 @@ namespace SteamBot
             }
 
             Bot.CombineAllMetal();
+            Log.Debug("Successfully logged in, reporting to manager");
             Bot.ReportToManager();
         }
 

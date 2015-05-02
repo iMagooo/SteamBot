@@ -56,6 +56,7 @@ namespace SteamBot
             }
 
             Bot.CombineAllMetal();
+            Log.Debug("Successfully logged in, reporting to manager");
             Bot.ReportToManager();
         }
 
