@@ -1189,10 +1189,12 @@ namespace SteamBot
             foreach (SteamID friend in friends)
             {
                 SteamFriends.RemoveFriend(friend);
+                RemoveUserHandler(friend);
                 count++;
             }
             log.Success("Removed " + count + " friends.");
 
+            friends.Clear();
         }
     }
 }
