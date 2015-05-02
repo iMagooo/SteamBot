@@ -351,7 +351,7 @@ namespace SteamBot
             // If both bots have 'checked-in' we can get them to trade each other
             if (collectingBot != null && givingBot != null)
             {
-                givingBot.SteamFriends.AddFriend(collectingBot.SteamUser.SteamID);
+                collectingBot.SteamFriends.AddFriend(givingBot.SteamUser.SteamID);
                 int numSlotsAvail = (int)collectingBot.MyInventory.NumSlots - collectingBot.MyInventory.Items.Count();
 
                 // If collecting bot has no inventory space available OR giving bot has no items to trade
@@ -362,7 +362,7 @@ namespace SteamBot
                 else
                 {
                     // MUST NOT trigger a trade until the bots are friends.
-                    while (givingBot.SteamFriends.GetFriendRelationship(collectingBot.SteamUser.SteamID) != EFriendRelationship.Friend)
+                    while (collectingBot.SteamFriends.GetFriendRelationship(givingBot.SteamUser.SteamID) != EFriendRelationship.Friend)
                     {
                         System.Threading.Thread.Sleep(100);
                     }
