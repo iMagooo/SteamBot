@@ -352,18 +352,7 @@ namespace SteamBot
             // If both bots have 'checked-in' we can get them to trade each other
             if (collectingBot != null && givingBot != null)
             {
-                if (givingBot.SteamFriends.GetFriendRelationship(collectingBot.SteamUser.SteamID) != EFriendRelationship.Friend)
-                {
-                    mainLog.Debug("Not friends, " + collectingBot.SteamUser.SteamID.ConvertToUInt64() + " is adding " + givingBot.SteamUser.SteamID.ConvertToUInt64());
-                    collectingBot.SteamFriends.AddFriend(givingBot.SteamUser.SteamID);
-                }
-                else
-                {
-                    mainLog.Debug("Already friends, " + collectingBot.SteamUser.SteamID.ConvertToUInt64() + " with " + givingBot.SteamUser.SteamID.ConvertToUInt64());
-                }
-
                 int numSlotsAvail = (int)collectingBot.MyInventory.NumSlots - collectingBot.MyInventory.Items.Count();
-
                 // If collecting bot has no inventory space available OR giving bot has no items to trade
                 if (numSlotsAvail == 0 || givingBot.MyInventory.GetNumberOfTradableItems() == 0)
                 {
@@ -372,15 +361,25 @@ namespace SteamBot
                 }
                 else
                 {
-                    // MUST NOT trigger a trade until the bots are friends.
-                    while (givingBot.SteamFriends.GetFriendRelationship(collectingBot.SteamUser.SteamID) != EFriendRelationship.Friend)
+                    if (givingBot.SteamFriends.GetFriendRelationship(collectingBot.SteamUser.SteamID) != EFriendRelationship.Friend)
                     {
-                        System.Threading.Thread.Sleep(100);
+                        mainLog.Debug("Not friends, " + collectingBot.SteamUser.SteamID.ConvertToUInt64() + " is adding " + givingBot.SteamUser.SteamID.ConvertToUInt64());
+                        collectingBot.SteamFriends.AddFriend(givingBot.SteamUser.SteamID);
+                        return;
                     }
-
-                    givingBot.tradeItems(numSlotsAvail, collectingBot.SteamUser.SteamID);
+                    else
+                    {
+                        mainLog.Debug("Already friends, " + collectingBot.SteamUser.SteamID.ConvertToUInt64() + " with " + givingBot.SteamUser.SteamID.ConvertToUInt64());
+                        givingBot.tradeItems(numSlotsAvail, collectingBot.SteamUser.SteamID);
+                    }
                 }
             }
+        }
+
+        public void ReportNowFriends()
+        {
+            int numSlotsAvail = (int)collectingBot.MyInventory.NumSlots - collectingBot.MyInventory.Items.Count();
+            givingBot.tradeItems(numSlotsAvail, collectingBot.SteamUser.SteamID);
         }
 
         public void ReportTradeSuccess()

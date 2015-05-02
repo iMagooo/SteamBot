@@ -1,5 +1,6 @@
 ﻿using SteamKit2;
 using System.Collections.Generic;
+using System.Timers;
 using SteamTrade;
 using SteamTrade.TradeOffer;
 using TradeAsset = SteamTrade.TradeOffer.TradeOffer.TradeStatusUser.TradeAsset;
@@ -8,6 +9,9 @@ namespace SteamBot
 {
     public class ItemGivingUserHandler : UserHandler
     {
+        static int InviteTimerInterval = 2000;
+        Timer inviteMsgTimer = new System.Timers.Timer(InviteTimerInterval);
+
         public ItemGivingUserHandler(Bot bot, SteamID sid) : base(bot, sid) { }
 
         public override void OnNewTradeOffer(TradeOffer offer)
@@ -35,9 +39,21 @@ namespace SteamBot
 
         public override bool OnGroupAdd() { return false; }
 
+
+        private void OnInviteTimerElapsed(object source, ElapsedEventArgs e, EChatEntryType type)
+        {
+            Bot.Manager.ReportNowFriends();
+            inviteMsgTimer.Enabled = false;
+            inviteMsgTimer.Stop();
+        }
+
         public override bool OnFriendAdd() 
         {
             Log.Debug("Friend request from: " + OtherSID.ConvertToUInt64() + ", is approved: " + IsApproved);
+            // Using a timer here because the tradee will fail to send if you do it too quickly
+            inviteMsgTimer.Interval = InviteTimerInterval;
+            inviteMsgTimer.Elapsed += (sender, e) => OnInviteTimerElapsed(sender, e, EChatEntryType.ChatMsg);
+            inviteMsgTimer.Enabled = true;
             return (IsAdmin || IsApproved); 
         }
 
